@@ -1,5 +1,5 @@
 #include<stdio.h>
-void main()
+int main()
 {
     /*single line comment*/
     /*multi line comment
@@ -13,12 +13,13 @@ void main()
     line 2;
     line 3;
     */
-   printf/*middle single line comment*/("comment parser ");
-   printf/*middle multi line comment
-   line 1;
-   line 2;
-   line 3;
-   */("in python\n");
+    printf/*middle single line comment*/("comment parser ");
+    printf/*middle multi line comment
+    line 1;
+    line 2;
+    line 3;
+    */(/*line4*/"in python\n");
 
-   printf("test /*comment inside printf*/program");
+    printf("test /*comment inside printf*/program");
+    return 0;
 }
