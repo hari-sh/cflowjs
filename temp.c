@@ -1,6 +1,13 @@
-#include<stdio.h>
-int main()
-{
-    
-    
-    printf("rana ");
+/*--1--*/#include<stdio.h>
+/*--2--*/int main()
+/*--3--*/{
+/*--4--*/    
+/*--5--*/    
+/*--10--*/    printf("rana ");/*--10--*/ 
+/*--11--*/    printf("bhai's ");/*--11--*/  
+/*--16--*/    printf("comment parser ");/*--16--*/
+/*--17--*/    printf(/*--21--*/"in python\n");/*--21--*/
+/*--22--*/
+/*--23--*/    printf("test program");/*--23--*/
+/*--24--*/    return 0;/*--24--*/
+/*--25--*/}

@@ -39,3 +39,4 @@ def remove_comments(fname):
 
 with open('comments.c') as f, open('temp.c', 'w') as temp:
     temp.writelines(remove_comments(f))
+

@@ -1,0 +1,12 @@
+def linesplit(strr):
+    result = []
+
+    lst = [0, 0, 2, 6, 9]
+    for a, b in zip(lst[:-1], lst[1:]):
+        result.append(strr[a:b])
+
+    print(result)
+
+string = 'anexample'
+linesplit(string)
+
