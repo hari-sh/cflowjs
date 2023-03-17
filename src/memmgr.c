@@ -9,7 +9,7 @@
 
 typedef ulong Align;
 
-union mmem_header_union //hi
+union mem_header_union
 {
     struct
     {
@@ -43,8 +43,7 @@ static byte pool[POOL_SIZE] = {0};
 static ulong pool_free_pos = 0;
 
 
-void 
-memmgr_init ()
+void memmgr_init()
 {
     base.s.next = 0;
     base.s.size = 0;
@@ -157,7 +156,7 @@ void* memmgr_alloc(ulong nbytes)
 // list. In any case, if the block being freed is adjacent to either neighbor,
 // the adjacent blocks are combined.
 //
-void* memmgr_free(void* ap)
+void memmgr_free(void* ap)
 {
     mem_header_t* block;
     mem_header_t* p;
