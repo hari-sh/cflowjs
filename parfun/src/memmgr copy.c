@@ -43,21 +43,17 @@ static byte pool[POOL_SIZE] = {0};
 static ulong pool_free_pos = 0;
 
 
-void 
-memmgr_init ()
+void memmgr_init ()
 {
-printf("memmgr_init : entry");
     base.s.next = 0;
     base.s.size = 0;
     freep = 0;
     pool_free_pos = 0;
-printf("memmgr_init : endoffun");
 }
 
 
 static mem_header_t* get_mem_from_pool(ulong nquantas)
 {
-printf("get_mem_from_pool : entry");
     ulong total_req_size;
 
     mem_header_t* h;
@@ -76,13 +72,10 @@ printf("get_mem_from_pool : entry");
     }
     else
     {
-printf("get_mem_from_pool : exit");
         return 0;
     }
 
-printf("get_mem_from_pool : exit");
     return freep;
-printf("get_mem_from_pool : endoffun");
 }
 
 
@@ -96,7 +89,6 @@ printf("get_mem_from_pool : endoffun");
 //
 void* memmgr_alloc(ulong nbytes)
 {
-printf("memmgr_alloc : entry");
     mem_header_t* p;
     mem_header_t* prevp;
 
@@ -136,7 +128,6 @@ printf("memmgr_alloc : entry");
             }
 
             freep = prevp;
-printf("memmgr_alloc : exit");
             return (void*) (p + 1);
         }
         // Reached end of free list ?
@@ -153,12 +144,10 @@ printf("memmgr_alloc : exit");
                 #ifdef DEBUG_MEMMGR_FATAL
                 printf("!! Memory allocation failed !!\n");
                 #endif
-printf("memmgr_alloc : exit");
                 return 0;
             }
         }
     }
-printf("memmgr_alloc : endoffun");
 }
 
 
@@ -167,9 +156,8 @@ printf("memmgr_alloc : endoffun");
 // list. In any case, if the block being freed is adjacent to either neighbor,
 // the adjacent blocks are combined.
 //
-void* memmgr_free(void* ap)
+void memmgr_free(void* ap)
 {
-printf("memmgr_free : entry");
     mem_header_t* block;
     mem_header_t* p;
 
@@ -215,5 +203,4 @@ printf("memmgr_free : entry");
     }
 
     freep = p;
-printf("memmgr_free : endoffun");
 }

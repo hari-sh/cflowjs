@@ -1,39 +1,15 @@
-def source_code(char):
-    if char == '/':
-        return comment_begin, ''
-    elif char == ';':
-        return None, char
-    return source_code, char
+from comments import source_code
+import re
 
-def comment_begin(char):
-    if char == '/':
-        return inline_comment, ''
-    if char == '*':
-        return block_comment, ''
-    return source_code, '/'+char
+matchstr = re.compile('[\w\s\*]+\w+\s*' + '\([\w\s\*\,]*\)' + '\s*\{')
 
-def inline_comment(char):
-    if char == '\n':
-        return source_code, char
-    return inline_comment, ''
-
-def block_comment(char):
-    if char == '*':
-        return end_block_comment, ''
-    return block_comment, ''
-
-def end_block_comment(char):
-    if char == '/':
-        return source_code, ''
-    return block_comment, ''
-
-def linesplit(strr, lst, counter):
-    result = []
-    for ind, (a, b)in enumerate(zip(lst[:-1], lst[1:])):
-        if (b-a != 0):
-            result.append(f'/*--{counter + ind}--*/' + strr[a:b])
-    print(result)
-    return result
+def parseName(combl):
+    x = re.search(matchstr, combl)
+    if x:
+        start, end = x.regs[0]
+        funName = combl[start:end].split('(')[0].split()[-1]
+        return funName
+    
 
 
 def gen_content(fname):
@@ -54,8 +30,8 @@ def gen_content(fname):
         if parser is None:
             break
 
-def remove_comments():   
-    with open('comments.c', 'r') as fname, open('temp.c', 'w') as temp:
+def remove_comments(src, dest):   
+    with open(src, 'r') as fname, open(dest, 'w') as temp:
         global cline
         global counter
         global lnos
@@ -64,16 +40,13 @@ def remove_comments():
             lnos = [1]
             gotstr = gen_content(fname)
             cline = ''.join(gotstr)
+            print(parseName(cline))
             lnos.append(len(cline))
-            print(lnos)
             clinspt = ''.join(linesplit(cline, lnos, counter))
             counter = counter + len(lnos) - 2
-            temp.write(clinspt)
-            # temp.write('/*--'+cline+'---*/')
-            # temp.write(cline)
-            # temp.write('\n/*----*/')
+            # temp.write(clinspt)
             if eof == True:
                 break
 
 eof = False
-remove_comments()
+remove_comments('parfun/src/memmgr.c', 'temp.c')
