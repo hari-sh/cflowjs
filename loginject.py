@@ -2,8 +2,10 @@ import re
 import os
 from fnmatch import fnmatch
 
-matchstr = re.compile('[\w\s\*]+\w+\s*' + '\([\w\s\*\,]*\)' + '\s*\{')
-
+defaulters = ['fun1', 'fun2']
+root = r'/home/rana'
+matchstr = re.compile('[\w+\s+]*' '\w+[\s\*]+' + '\s*\w+\s*' + '\([\w\s\*\,\[\]]*\)' + '\s*\{')
+keywords = ['if', 'for', 'while', 'switch', 'PACK']
 class FunParse:
     def __init__(self, name, mode):
         self.name = name
@@ -62,6 +64,13 @@ def endoffun(strr, lst):
             return counter + ind
     return None
 
+def addparsedict(lno, name, mode):
+    if lno in parfundict:
+        parfundict[lno].append(FunParse(name, mode))
+    else:
+        parfundict[lno] = [FunParse(name, mode)]
+
+
 def gen_content(fname):
     parser = source_code
     charnum = 1
@@ -95,20 +104,20 @@ def remove_comments(src, dest):
             cline = ''.join(gotstr)
             estimatedName = parseName(cline.replace('\n', ' '))
             lnos.append(len(cline))
-            if estimatedName is not None:
+            if estimatedName is not None and estimatedName not in keywords:
                 bracer = 1
                 funName = estimatedName
-                entryline = matchedline(cline, lnos, '\)*\{')
-                if entryline is not None:
-                    entryline = entryline + 1
-                    parfundict[entryline] = FunParse(funName, 'entry')
+                lno = matchedline(cline, lnos, '\)*\{')
+                if lno is not None:
+                    lno = lno + 1
+                    addparsedict(lno+1, funName, 'entry')
             else:
-                exitline = matchedline(cline, lnos, 'return')
-                if exitline is not None:
-                    parfundict[exitline] = FunParse(funName, 'exit')
-                eofline = endoffun(cline, lnos)
-                if eofline is not None:
-                    parfundict[eofline] = FunParse(funName, 'endoffun')
+                lno = matchedline(cline, lnos, 'return[\s;\(])')
+                if lno is not None:
+                    addparsedict(lno, funName, 'exit')
+                lno = endoffun(cline, lnos)
+                if lno is not None:
+                    addparsedict(lno, funName, 'endoffun')
 
             counter = counter + len(lnos) - 2
             if eof:
@@ -118,9 +127,11 @@ def writefile(src, dest):
     with open(src, 'r') as fname, open(dest, 'w') as temp:
         for ind, line in enumerate(fname):
             if (ind + 1) in parfundict:
-                val = parfundict[ind + 1]
-                adder = f'printf("{val.name} : {val.mode}");'
-                line = adder + '\n' + line
+                lval = parfundict[ind + 1]
+                effec = ''
+                for val in lval and val.name not in defaulters:
+                    effec = effec + f'printf("{val.name} : {val.mode}");' + '\n'
+                line = effec + line
             temp.write(line)
 
 def procfile(src):
@@ -131,10 +142,10 @@ def procfile(src):
     infile = src
     outfile = "temp.c"
     remove_comments(infile, outfile)
+    print(infile)
     writefile(infile, outfile)
     os.replace(outfile, infile)
 
-root = '/Users/hari/codes/python/profiler/src'
 pattern = "*.c"
 
 for path, subdirs, files in os.walk(root):
