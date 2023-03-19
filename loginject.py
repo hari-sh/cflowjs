@@ -1,4 +1,6 @@
 import re
+import os
+from fnmatch import fnmatch
 
 matchstr = re.compile('[\w\s\*]+\w+\s*' + '\([\w\s\*\,]*\)' + '\s*\{')
 
@@ -100,16 +102,13 @@ def remove_comments(src, dest):
                 if entryline is not None:
                     entryline = entryline + 1
                     parfundict[entryline] = FunParse(funName, 'entry')
-                    # print(f'entry {funName} at {entryline}')
             else:
                 exitline = matchedline(cline, lnos, 'return')
                 if exitline is not None:
                     parfundict[exitline] = FunParse(funName, 'exit')
-                    # print(f'exit {funName} at {exitline}')
                 eofline = endoffun(cline, lnos)
                 if eofline is not None:
                     parfundict[eofline] = FunParse(funName, 'endoffun')
-                    # print(f'endoffun {funName} at {eofline}')
 
             counter = counter + len(lnos) - 2
             if eof:
@@ -124,12 +123,21 @@ def writefile(src, dest):
                 line = adder + '\n' + line
             temp.write(line)
 
+def procfile(src):
+    global eof, bracer, parfundict
+    eof = False
+    bracer = 100000
+    parfundict = {}
+    infile = src
+    outfile = "temp.c"
+    remove_comments(infile, outfile)
+    writefile(infile, outfile)
+    os.replace(outfile, infile)
 
-eof = False
-bracer = 100000
-parfundict = {}
-remove_comments('parfun/src/memmgr.c', 'temp.c')
-writefile('parfun/src/memmgr.c', 'temp.c')
-# for key in parfundict:
-#     val = parfundict[key]
-#     print(f'printf("{key}: {val.name}, {val.mode}")')
+root = '/Users/hari/codes/python/profiler/src'
+pattern = "*.c"
+
+for path, subdirs, files in os.walk(root):
+    for name in files:
+        if fnmatch(name, pattern):
+            procfile(os.path.join(path, name))
