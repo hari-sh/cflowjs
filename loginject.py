@@ -2,10 +2,13 @@ import re
 import os
 from fnmatch import fnmatch
 
+#defaulters
+
 defaulters = ['fun1', 'fun2']
 root = r'/home/rana'
-matchstr = re.compile('[\w+\s+]*' '\w+[\s\*]+' + '\s*\w+\s*' + '\([\w\s\*\,\[\]]*\)' + '\s*\{')
+matchstr = re.compile('(\w+\s+)*' + '\w+[\s\*]+' + '\s*\w+\s*' + '\([\w\s\*\,\[\]]*\)' + '\s*\{')
 keywords = ['if', 'for', 'while', 'switch', 'PACK']
+
 class FunParse:
     def __init__(self, name, mode):
         self.name = name
@@ -109,10 +112,9 @@ def remove_comments(src, dest):
                 funName = estimatedName
                 lno = matchedline(cline, lnos, '\)*\{')
                 if lno is not None:
-                    lno = lno + 1
-                    addparsedict(lno+1, funName, 'entry')
+                    addparsedict(lno + 1, funName, 'entry')
             else:
-                lno = matchedline(cline, lnos, 'return[\s;\(])')
+                lno = matchedline(cline, lnos, 'return[\s;\(]')
                 if lno is not None:
                     addparsedict(lno, funName, 'exit')
                 lno = endoffun(cline, lnos)
