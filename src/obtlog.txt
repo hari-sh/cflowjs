@@ -26,3 +26,4 @@ n   exit
 m   exit
 l   exit
 a   exit
+a   exit
