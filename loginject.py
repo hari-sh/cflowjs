@@ -2,7 +2,6 @@ import re
 import os
 from fnmatch import fnmatch
 
-
 matchstr = re.compile('[\w\s\*]+\w+\s*' + '\([\w\s\*\,]*\)' + '\s*\{')
 
 class FunParse:
@@ -142,4 +141,3 @@ for path, subdirs, files in os.walk(root):
     for name in files:
         if fnmatch(name, pattern):
             procfile(os.path.join(path, name))
-
