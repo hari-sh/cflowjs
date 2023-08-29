@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Markmap</title>
+  <link rel="stylesheet" href="mm.css">
+</head>
+
+<body>
+  <svg id="mindmap"></svg>
+  <script src="d3.js"></script>
+  <script src="mm.js"></script>
+  <script>
+    const treedata = 
+{
+  "content": "flow",
+  "children": [
+    {
+      "content": "a",
+      "children": [
+        {
+          "content": "b"
+        },
+        {
+          "content": "c"
+        },
+        {
+          "content": "d",
+          "children": [
+            {
+              "content": "e"
+            },
+            {
+              "content": "f",
+              "children": [
+                {
+                  "content": "g"
+                },
+                {
+                  "content": "h",
+                  "children": [
+                    {
+                      "content": "i"
+                    }
+                  ]
+                },
+                {
+                  "content": "j"
+                }
+              ]
+            },
+            {
+              "content": "k"
+            }
+          ]
+        },
+        {
+          "content": "l",
+          "children": [
+            {
+              "content": "m"
+            },
+            {
+              "content": "n"
+            }
+          ]
+        },
+        {
+          "content": "o"
+        }
+      ]
+    },
+    {
+      "content": "p"
+    }
+  ]
+}
+  </script>
+
+  <script>((getMarkmap, getOptions, root, jsonOptions) => {
+      const markmap = getMarkmap();
+      window.mm = markmap.Markmap
+      .create('svg#mindmap', 
+              (getOptions || markmap.deriveOptions)(jsonOptions), 
+              root);
+    })(() => window.markmap, null, treedata, {})</script>
+</body>
+
+</html>
